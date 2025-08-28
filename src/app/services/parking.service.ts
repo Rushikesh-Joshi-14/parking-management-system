@@ -27,7 +27,7 @@ export class ParkingService {
   constructor(private localStorageService: LocalStorageService, private logger: LoggerService) {}
 
   // POST /api/parking/entry
-  parkVehicle(licensePlate: string, vehicleType: VehicleType): Observable<ParkingEntryResponse> {
+  parkVehicle(licensePlate: string, vehicleType: VehicleType, customerName?: string, customerMobile?: string): Observable<ParkingEntryResponse> {
     const data = this.localStorageService.getParkingData();
     if (!data) {
       this.logger.error('Parking data missing on parkVehicle', 'ParkingService');
@@ -73,7 +73,9 @@ export class ParkingService {
       timeOfEntry,
       ticketChargePerHr,
       parkingSlotNumber: availableSlot.id,
-      ticketId
+      ticketId,
+      customerName,
+      customerMobile
     };
 
     // Update slot
@@ -86,7 +88,7 @@ export class ParkingService {
 
     // Save data
     this.localStorageService.saveParkingData(data);
-    this.logger.info('Vehicle parked successfully', 'ParkingService', { licensePlate, vehicleType, slot: availableSlot.id, ticketId });
+    this.logger.info('Vehicle parked successfully', 'ParkingService', { licensePlate, vehicleType, slot: availableSlot.id, ticketId, customerName, customerMobile });
 
     return of({
       timeOfEntry,

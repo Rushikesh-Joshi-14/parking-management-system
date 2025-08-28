@@ -84,6 +84,8 @@ import { CurrencyFormatPipe } from '../pipes/currency-format.pipe';
           
           <div *ngIf="slot.isOccupied && slot.vehicleDetails" class="vehicle-info">
             <p><strong>{{ slot.vehicleDetails.licensePlate }}</strong></p>
+            <p *ngIf="slot.vehicleDetails.customerName">👤 {{ slot.vehicleDetails.customerName }}</p>
+            <p *ngIf="slot.vehicleDetails.customerMobile">📞 {{ slot.vehicleDetails.customerMobile }}</p>
             <p class="entry-time">{{ slot.vehicleDetails.timeOfEntry | date:'short' }}</p>
             <button 
               (click)="openExitModal(slot.vehicleDetails.ticketId)" 

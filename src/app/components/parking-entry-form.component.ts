@@ -19,6 +19,50 @@ import { LoggerService } from '../services/logger.service';
         
         <form #entryForm="ngForm" (ngSubmit)="onSubmit(entryForm)" class="entry-form">
           <div class="form-group">
+            <label for="customerName">Customer Name *</label>
+            <input 
+              type="text" 
+              id="customerName"
+              name="customerName"
+              [(ngModel)]="formData.customerName"
+              #customerName="ngModel"
+              class="form-control"
+              [class.invalid]="customerName.invalid && customerName.touched"
+              placeholder="e.g., Rushikesh Joshi"
+              required
+              maxlength="50">
+            <div class="error-messages" *ngIf="customerName.invalid && customerName.touched">
+              <small *ngIf="customerName.errors?.['required']" class="error">
+                Customer name is required
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="customerMobile">Mobile Number *</label>
+            <input 
+              type="tel" 
+              id="customerMobile"
+              name="customerMobile"
+              [(ngModel)]="formData.customerMobile"
+              #customerMobile="ngModel"
+              class="form-control"
+              [class.invalid]="customerMobile.invalid && customerMobile.touched"
+              placeholder="e.g., 9876543210"
+              required
+              pattern="^[0-9]{10}$"
+              maxlength="10">
+            <div class="error-messages" *ngIf="customerMobile.invalid && customerMobile.touched">
+              <small *ngIf="customerMobile.errors?.['required']" class="error">
+                Mobile number is required
+              </small>
+              <small *ngIf="customerMobile.errors?.['pattern']" class="error">
+                Enter a valid 10-digit mobile number
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group">
             <label for="licensePlate">License Plate *</label>
             <input 
               type="text" 
@@ -281,6 +325,8 @@ import { LoggerService } from '../services/logger.service';
 })
 export class ParkingEntryFormComponent {
   formData = {
+    customerName: '',
+    customerMobile: '',
     licensePlate: '',
     vehicleType: '' as VehicleType
   };
@@ -301,7 +347,9 @@ export class ParkingEntryFormComponent {
 
       this.parkingService.parkVehicle(
         this.formData.licensePlate.toUpperCase(),
-        this.formData.vehicleType
+        this.formData.vehicleType,
+        this.formData.customerName.trim(),
+        this.formData.customerMobile.trim()
       ).subscribe({
         next: (response) => {
           this.isLoading = false;
@@ -312,7 +360,7 @@ export class ParkingEntryFormComponent {
           if (response.success) {
             this.ticketInfo = response;
             form.resetForm();
-            this.formData = { licensePlate: '', vehicleType: '' as VehicleType };
+            this.formData = { customerName: '', customerMobile: '', licensePlate: '', vehicleType: '' as VehicleType };
           }
         },
         error: (error) => {

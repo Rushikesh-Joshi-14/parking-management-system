@@ -13,6 +13,8 @@ export interface VehicleEntry {
   ticketChargePerHr: number;
   parkingSlotNumber: number;
   ticketId: string;
+  customerName?: string;
+  customerMobile?: string;
 }
 
 export interface ParkingEntryResponse {
